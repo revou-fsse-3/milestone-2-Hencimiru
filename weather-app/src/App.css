@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  margin: 0;
+  padding:0;
+  box-sizing: border-box;
+}
+.App {
+  text-align: center;
+}
+.container {
+  background-color: #ffffff7d;
+  padding: 7rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 10px 15px rgb(0 0 0 / 20%);
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.8);
+  background-blend-mode: overlay;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+}
+.capital{
+  text-transform: capitalize;
+  text-align: center;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+.h1 {
+  text-align: center;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
