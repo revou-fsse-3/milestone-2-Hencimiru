@@ -7,6 +7,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { SecondWrapper } from "../styled-componets/styled.module";
 import { NavLink } from "react-router-dom";
+import { FaWind } from "react-icons/fa";
 
 interface HourlyData {
   dt: number;
@@ -65,7 +66,7 @@ const App: React.FC = () => {
       <SecondWrapper>
         {hourlyData.length > 0 && (
           <div className="container">
-            <h1 className="capital">Top Five Hourly {CITY_NAME} Weather</h1>
+            <h1 className="capital">{CITY_NAME} Weather: 5-Hour Forecast</h1>
             {hourlyData.slice(0, 5).map((hour, index) => (
 
               <HourlyContainer key={index}>

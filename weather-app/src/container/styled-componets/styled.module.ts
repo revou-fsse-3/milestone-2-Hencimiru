@@ -1,11 +1,10 @@
 import styled from "styled-components";
 
 export const SecondWrapper = styled.div`
-  height: 100vh;
+  height: 120vh;
   background: linear-gradient(to right, #403a3e, #be5869);
-
+  margin: auto;
   .button {
-
     margin-top: 15px;
     background: linear-gradient(to right, #403a3e, #be5869);
     color: #ffff;
