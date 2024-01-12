@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { MainWrapper } from "../styled-componets/styled.module";
 import { AiOutlineSearch } from "react-icons/ai";
 import { WiHumidity } from "react-icons/wi";
@@ -12,12 +12,11 @@ import {
 import { RiLoaderFill } from "react-icons/ri";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 import axios from "axios";
-import {  useNavigate } from "react-router-dom";
-// import Navbar from "../../components/Navbar/navbar";
+import { useNavigate } from "react-router-dom";
 
+// Define the shape of weather data
 interface WeatherDataProps {
   name: string;
-
   main: {
     temp: number;
     humidity: number;
@@ -33,30 +32,35 @@ interface WeatherDataProps {
   };
 }
 
-const DisplayWeather = () => {
+// Functional component for displaying weather information
+const DisplayWeather: React.FC = () => {
+  // React hook to enable navigation in the app
   const navigate = useNavigate();
+
+  // API key and endpoint for OpenWeatherMap API
   const api_key = "d6173a99dd78f55c547d7d12a808a6b5";
   const api_Endpoint = "https://api.openweathermap.org/data/2.5/";
 
-  const [weatherData, setWeatherData] = React.useState<WeatherDataProps | null>(
-    null
-  );
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [searchCity, setSearchCity] = React.useState("");
+  // State variables
+  const [weatherData, setWeatherData] = useState<WeatherDataProps | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [searchCity, setSearchCity] = useState<string>("");
 
-  const fetchCurrentWeather = React.useCallback(
-    async (lat: number, lon: number) => {
+  // Function to fetch current weather based on latitude and longitude
+  const fetchCurrentWeather = useCallback(
+    async (lat: number, lon: number): Promise<WeatherDataProps> => {
       const url = `${api_Endpoint}weather?lat=${lat}&lon=${lon}&appid=${api_key}&units=metric`;
-      const response = await axios.get(url);
+      const response = await axios.get<WeatherDataProps>(url);
       return response.data;
     },
     [api_Endpoint, api_key]
   );
 
-  const fetchWeatherData = async (city: string) => {
+  // Function to fetch weather data for a given city
+  const fetchWeatherData = async (city: string): Promise<{ currentWeatherData: WeatherDataProps }> => {
     try {
       const url = `${api_Endpoint}weather?q=${city}&appid=${api_key}&units=metric`;
-      const searchResponse = await axios.get(url);
+      const searchResponse = await axios.get<WeatherDataProps>(url);
 
       const currentWeatherData: WeatherDataProps = searchResponse.data;
       return { currentWeatherData };
@@ -64,6 +68,8 @@ const DisplayWeather = () => {
       throw error;
     }
   };
+
+  // Function to handle the search button click
   const handleSearch = async () => {
     if (searchCity.trim() === "") {
       return;
@@ -72,18 +78,24 @@ const DisplayWeather = () => {
     try {
       const { currentWeatherData } = await fetchWeatherData(searchCity);
       setWeatherData(currentWeatherData);
-    } catch (error) {}
-  };
-
-  const handleSearchCity = () => {
-    if (searchCity) {
-      fetchWeatherData(searchCity);
-      // Redirect to the next page (assuming "/nextpage" is the route for the next page)
-      navigate("/hourly", { state: { searchCity } });
+    } catch (error) {
+      // Handle error
     }
   };
 
-  const iconChanger = (weather: string) => {
+  // Function to handle the city search button click
+  const handleSearchCity = () => {
+    if (searchCity) {
+      fetchWeatherData(searchCity).then(({ currentWeatherData }) => {
+        setWeatherData(currentWeatherData);
+        // Redirect to the next page (assuming "/hourly" is the route for the next page)
+        navigate("/hourly", { state: { searchCity } });
+      });
+    }
+  };
+
+  // Function to determine the appropriate weather icon based on weather conditions
+  const iconChanger = (weather: string): React.ReactNode => {
     let iconElement: React.ReactNode;
     let iconColor: string;
 
@@ -118,13 +130,12 @@ const DisplayWeather = () => {
     );
   };
 
-  React.useEffect(() => {
+  // Use effect hook to fetch weather data based on current geolocation
+  useEffect(() => {
     const fetchData = async () => {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
-        const [currentWeather] = await Promise.all([
-          fetchCurrentWeather(latitude, longitude),
-        ]);
+        const [currentWeather] = await Promise.all([fetchCurrentWeather(latitude, longitude)]);
         setWeatherData(currentWeather);
         setIsLoading(true);
       });
@@ -155,9 +166,7 @@ const DisplayWeather = () => {
             <div className="weatherArea">
               <h1>{weatherData.name}</h1>
               <span>{weatherData.sys.country}</span>
-              <div className="icon">
-                {iconChanger(weatherData.weather[0].main)}
-              </div>
+              <div className="icon">{iconChanger(weatherData.weather[0].main)}</div>
               <h1>{weatherData.main.temp.toFixed(0)}</h1>
               <h2>{weatherData.weather[0].main}</h2>
             </div>
@@ -187,7 +196,7 @@ const DisplayWeather = () => {
           </div>
         )}
         <div className="topfive">
-          <button className="button"  onClick={handleSearchCity}>
+          <button className="button" onClick={handleSearchCity}>
             <h1 className="ButtonText"> {searchCity} Weather: 5-Hour Forecast</h1>
           </button>
         </div>
