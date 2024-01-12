@@ -7,7 +7,6 @@ import {
 import { useLocation } from "react-router-dom";
 import { SecondWrapper } from "../styled-componets/styled.module";
 import { NavLink } from "react-router-dom";
-import { FaWind } from "react-icons/fa";
 
 interface HourlyData {
   dt: number;
