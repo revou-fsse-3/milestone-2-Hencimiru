@@ -65,7 +65,7 @@ const App: React.FC = () => {
       <SecondWrapper>
         {hourlyData.length > 0 && (
           <div className="container">
-            <h1 className="capital">{CITY_NAME} Weather: 5-Hour Forecast</h1>
+            <h1 className="capital">{CITY_NAME} Weather: 3-Hour Forecast</h1>
             {hourlyData.slice(0, 5).map((hour, index) => (
 
               <HourlyContainer key={index}>

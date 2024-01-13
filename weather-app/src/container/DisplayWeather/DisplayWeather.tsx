@@ -197,7 +197,7 @@ const DisplayWeather: React.FC = () => {
         )}
         <div className="topfive">
           <button className="button" onClick={handleSearchCity}>
-            <h1 className="ButtonText"> {searchCity} Weather: 5-Hour Forecast</h1>
+            <h1 className="ButtonText"> {searchCity} Weather: 3-Hour Forecast</h1>
           </button>
         </div>
       </div>
